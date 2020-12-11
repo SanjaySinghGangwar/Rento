@@ -8,11 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sanjaysgangwar.rento.R
-import com.sanjaysgangwar.rento.utils.mToast
+import com.sanjaysgangwar.rento.databinding.HomeBinding
 
 class Home : Fragment(), View.OnClickListener {
+    private var binding: HomeBinding? = null
+    private val bind get() = binding!!
+
     private lateinit var navController: NavController
     private lateinit var materialAlertDialogBuilder: MaterialAlertDialogBuilder
     private lateinit var customAlertDialogView: View
@@ -21,17 +23,17 @@ class Home : Fragment(), View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.home, container, false)
-        materialAlertDialogBuilder = MaterialAlertDialogBuilder(view.context)
-        customAlertDialogView = LayoutInflater.from(context)
-            .inflate(R.layout.add_users, null, false)
-        return view
+        binding = HomeBinding.inflate(layoutInflater, container, false)
+        return bind.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-        view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener(this)
+        bind.fab.setOnClickListener(this)
+        materialAlertDialogBuilder = MaterialAlertDialogBuilder(view.context)
+        customAlertDialogView = LayoutInflater.from(context)
+            .inflate(R.layout.add_users, null, false)
     }
 
     override fun onClick(v: View?) {
@@ -45,6 +47,6 @@ class Home : Fragment(), View.OnClickListener {
 
     private fun openDialogToEnterInfo() {
         val ad = addUser()
-        ad.showNow(parentFragmentManager,"add User")
+        ad.showNow(parentFragmentManager, "add User")
     }
 }

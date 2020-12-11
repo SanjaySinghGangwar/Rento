@@ -33,7 +33,7 @@ object mToast {
         toast.show()
     }
 
-    fun toastShow(context: Context, Message: String?) {
+    fun showToastMessage(context: Context, Message: String?) {
         val toast = Toast.makeText(context, Message, Toast.LENGTH_LONG)
         val view = toast.view
         view!!.background.setColorFilter(
@@ -59,8 +59,21 @@ object mToast {
         toast.show()
     }
 
+    fun successShowMessage(context: Context, Message: String?) {
+        val toast = Toast.makeText(context, Message, Toast.LENGTH_LONG)
+        val view = toast.view
+        view!!.background.setColorFilter(
+            context.resources.getColor(R.color.holo_green_dark),
+            PorterDuff.Mode.SRC_IN
+        )
+        val text = view.findViewById<TextView>(R.id.message)
+        text.textSize
+        text.setTextColor(context.resources.getColor(R.color.white))
+        toast.show()
+    }
+
     fun checker(context: Context?) {
-        Toast.makeText(context, "Checker !! ", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "I M ALIVE !! ", Toast.LENGTH_LONG).show()
     }
 
     fun showToast(context: Context?, message: String?, BackgroundColor: Int, textColor: Int) {

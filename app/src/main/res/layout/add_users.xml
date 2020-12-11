@@ -45,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/zeyada"
                 android:hint="Name"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.hbb20.CountryCodePicker
@@ -68,11 +69,13 @@
             android:layout_marginTop="15dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/zeyada"
                 android:hint="Number"
-                android:inputType="number" />
+                android:inputType="number"
+                android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -82,13 +85,32 @@
             android:layout_marginTop="15dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/rent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/zeyada"
                 android:hint="Rent"
-                android:inputType="number" />
+
+                android:inputType="number"
+                android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/zeyada"
+                android:hint="DATE"
+                android:focusable="false"
+                android:inputType="number"
+                android:textStyle="bold" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/add"
@@ -99,7 +121,9 @@
             android:fontFamily="@font/zeyada"
             android:foregroundGravity="center"
             android:gravity="center"
-            android:text="@string/add" />
+            android:text="@string/add"
+            android:textStyle="bold" />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.core.widget.NestedScrollView>

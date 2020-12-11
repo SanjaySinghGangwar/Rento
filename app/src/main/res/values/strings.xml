@@ -93,4 +93,11 @@
     </string>
     <string name="cancel">CANCEL</string>
     <string name="add">ADD</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">LOGIN</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="e_mail">E-Mail</string>
+    <string name="main_layout">main Layout</string>
+    <string name="main_imageview">main ImageView</string>
 </resources>
