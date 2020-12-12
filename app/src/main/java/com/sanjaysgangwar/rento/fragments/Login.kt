@@ -48,7 +48,7 @@ class Login : Fragment(), View.OnClickListener {
         when (v?.id) {
             R.id.loginButton -> {
                 if (bind.email.text.isNullOrEmpty() || bind.password.text.isNullOrEmpty()) {
-                    mToast.errorMessageShow(v.context, "Enter Details")
+                    mToast.errorMessageShow(v.context, "Enter All Details")
                 } else {
                     loginUserUsingEmailId(
                         v.context,
@@ -77,7 +77,7 @@ class Login : Fragment(), View.OnClickListener {
 
                 mToast.errorMessageShow(
                     context,
-                    signInTask.exception?.message.toString()
+                    signInTask.exception?.localizedMessage.toString()
                 )
                 hideProgressDialog()
 

@@ -50,7 +50,7 @@ class signUp : Fragment(), View.OnClickListener {
             }
             R.id.signUpButton -> {
                 if (bind.email.text.isNullOrEmpty() || bind.password.text.isNullOrEmpty() || bind.confirmPassword.text.isNullOrEmpty()) {
-                    mToast.errorMessageShow(v.context, "Enter Details")
+                    mToast.errorMessageShow(v.context, "Enter All Details")
                 } else {
                     if (bind.password.text.toString().trim() == bind.confirmPassword.text.toString()
                             .trim()
@@ -84,7 +84,7 @@ class signUp : Fragment(), View.OnClickListener {
                 hideProgressDialog()
                 mToast.errorMessageShow(
                     v.context,
-                    createUser.exception?.message.toString()
+                    createUser.exception?.localizedMessage.toString()
                 )
             }
 

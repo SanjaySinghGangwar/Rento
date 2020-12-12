@@ -10,10 +10,15 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.sanjaysgangwar.rento.R
 import com.sanjaysgangwar.rento.databinding.AddUsersBinding
 import com.sanjaysgangwar.rento.utils.mToast
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
+
 
 class addUser : BottomSheetDialogFragment(), View.OnClickListener {
     private var binding: AddUsersBinding? = null
@@ -23,6 +28,7 @@ class addUser : BottomSheetDialogFragment(), View.OnClickListener {
     lateinit var datePicker: MaterialDatePicker.Builder<*>
     lateinit var picker: MaterialDatePicker<*>
     lateinit var date: String
+    lateinit var myRef: DatabaseReference
 
 
     override fun onCreateView(
@@ -44,6 +50,7 @@ class addUser : BottomSheetDialogFragment(), View.OnClickListener {
     private fun initAllComponents(view: View) {
         mAuth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
+        myRef = database.getReference(view.resources.getString(R.string.app_name))
         datePicker = MaterialDatePicker.Builder.datePicker()
         datePicker.setTitleText("Select a Date")
         picker = datePicker.build()
@@ -67,7 +74,7 @@ class addUser : BottomSheetDialogFragment(), View.OnClickListener {
                     bind.ccp.defaultCountryCodeWithPlus.toString().trim().isNullOrEmpty() ||
                     bind.date.text.toString().trim().isNullOrEmpty()
                 ) {
-                    mToast.errorMessageShow(v.context, "Enter Details")
+                    mToast.errorMessageShow(v.context, "Enter All Details")
                 } else {
                     sendToDatabase(
                         v.context,
@@ -79,9 +86,6 @@ class addUser : BottomSheetDialogFragment(), View.OnClickListener {
 
                     )
                 }
-
-
-//                dismiss()
             }
         }
     }
@@ -94,7 +98,29 @@ class addUser : BottomSheetDialogFragment(), View.OnClickListener {
         rent: String,
         date: String,
     ) {
-        mToast.checker(context)
+        val random = Random()
+        val timestamp: String =
+            SimpleDateFormat("yyyyMMddHHmmssmsms").format(Date()) + random.nextInt(400)
+
+        var dataToSend = HashMap<String, String>()
+        dataToSend["name"] = name
+        dataToSend["number"] = countryCode + number
+        dataToSend["rent"] = rent
+        dataToSend["date"] = date
+        myRef.child(FirebaseAuth.getInstance().uid.toString())
+            .child(timestamp)
+            .setValue(dataToSend)
+            .addOnCompleteListener { sendToDatabase ->
+                if (sendToDatabase.isSuccessful) {
+                    mToast.successShowMessage(context, "ADDED !!")
+                    dismiss()
+                } else {
+                    mToast.errorMessageShow(
+                        context,
+                        sendToDatabase.exception?.localizedMessage.toString()
+                    )
+                }
+            }
     }
 
     override fun onDismiss(dialog: DialogInterface) {
