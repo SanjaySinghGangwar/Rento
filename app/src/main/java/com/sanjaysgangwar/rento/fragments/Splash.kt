@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.sanjaysgangwar.rento.R
 
-class SplashScreen : Fragment() {
+class Splash : Fragment() {
     private var mAuth: FirebaseAuth? = null
     private var user: FirebaseUser? = null
     lateinit var navController: NavController
@@ -20,7 +20,7 @@ class SplashScreen : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_splash_screen, container, false)
+        return inflater.inflate(R.layout.splash, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

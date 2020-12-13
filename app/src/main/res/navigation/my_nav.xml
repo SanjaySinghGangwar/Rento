@@ -6,9 +6,9 @@
     app:startDestination="@id/splashScreen">
     <fragment
         android:id="@+id/splashScreen"
-        android:name="com.sanjaysgangwar.rento.fragments.SplashScreen"
+        android:name="com.sanjaysgangwar.rento.fragments.Splash"
         android:label="fragment_splash_screen"
-        tools:layout="@layout/fragment_splash_screen">
+        tools:layout="@layout/splash">
         <action
             android:id="@+id/splash_to_home"
             app:destination="@id/home"

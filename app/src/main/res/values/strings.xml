@@ -100,4 +100,5 @@
     <string name="e_mail">E-Mail</string>
     <string name="main_layout">main Layout</string>
     <string name="main_imageview">main ImageView</string>
+    <string name="profile">Profile</string>
 </resources>

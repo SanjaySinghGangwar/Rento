@@ -2,9 +2,8 @@ package com.sanjaysgangwar.rento.fragments
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -19,6 +18,7 @@ import com.sanjaysgangwar.rento.R
 import com.sanjaysgangwar.rento.databinding.HomeBinding
 import com.sanjaysgangwar.rento.model.modelClass
 import com.sanjaysgangwar.rento.viewHolders.homeViewHolder
+import com.squareup.picasso.Picasso
 
 
 class Home : Fragment(), View.OnClickListener {
@@ -39,22 +39,37 @@ class Home : Fragment(), View.OnClickListener {
         return bind.root
     }
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAllComponents(view)
+        (activity as AppCompatActivity?)!!.setSupportActionBar(bind.toolbar)
     }
 
     private fun initAllComponents(view: View) {
         navController = Navigation.findNavController(view)
 
+
         database = FirebaseDatabase.getInstance()
         myRef = database.getReference(view.resources.getString(R.string.app_name))
-            .child(FirebaseAuth.getInstance().uid.toString())
+            .child(FirebaseAuth.getInstance().uid.toString()).child("tenants")
         materialAlertDialogBuilder = MaterialAlertDialogBuilder(view.context)
         customAlertDialogView = LayoutInflater.from(context)
             .inflate(R.layout.add_users, null, false)
         bind.fab.setOnClickListener(this)
         bind.showTenents.layoutManager = LinearLayoutManager(context)
+        //AT The End
+        Picasso.get()
+            .load("https://therightsofnature.org/wp-content/uploads/2018/01/turkey-3048299_1920-1366x550.jpg")
+            .placeholder(R.drawable.icon)
+            .error(R.drawable.icon)
+            .into(bind.userImage);
     }
 
     override fun onClick(v: View?) {
@@ -122,6 +137,26 @@ class Home : Fragment(), View.OnClickListener {
     private fun operationToPerform(view: View?, position: Int) {
         Log.i("OnClick ", "operationToPerform: $position")
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.home_option_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.profile -> {
+                openProfileDialog()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun openProfileDialog() {
+        val profile = profile()
+        profile.showNow(parentFragmentManager, "add User")
+    }
+
 }
 
 

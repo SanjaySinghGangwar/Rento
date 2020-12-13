@@ -108,7 +108,7 @@ class addUser : BottomSheetDialogFragment(), View.OnClickListener {
         dataToSend["number"] = countryCode + number
         dataToSend["rent"] = rent
         dataToSend["date"] = date
-        myRef.child(FirebaseAuth.getInstance().uid.toString())
+        myRef.child(FirebaseAuth.getInstance().uid.toString()).child("tenants")
             .child(timestamp)
             .setValue(dataToSend)
             .addOnCompleteListener { sendToDatabase ->
