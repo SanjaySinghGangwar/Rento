@@ -98,6 +98,7 @@ class addUser : BottomSheetDialogFragment(), View.OnClickListener {
         rent: String,
         date: String,
     ) {
+        showProgressDialog()
         val random = Random()
         val timestamp: String =
             SimpleDateFormat("yyyyMMddHHmmssmsms").format(Date()) + random.nextInt(400)
@@ -112,15 +113,27 @@ class addUser : BottomSheetDialogFragment(), View.OnClickListener {
             .setValue(dataToSend)
             .addOnCompleteListener { sendToDatabase ->
                 if (sendToDatabase.isSuccessful) {
+                    hideProgressDialog()
                     mToast.successShowMessage(context, "ADDED !!")
                     dismiss()
                 } else {
+                    hideProgressDialog()
                     mToast.errorMessageShow(
                         context,
                         sendToDatabase.exception?.localizedMessage.toString()
                     )
                 }
             }
+    }
+
+    private fun hideProgressDialog() {
+        bind.ProgressBar.root.visibility = View.GONE
+        bind.add.visibility = View.VISIBLE
+    }
+
+    private fun showProgressDialog() {
+        bind.ProgressBar.root.visibility = View.VISIBLE
+        bind.add.visibility = View.GONE
     }
 
     override fun onDismiss(dialog: DialogInterface) {

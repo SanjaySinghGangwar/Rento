@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.fragment.app.Fragment
@@ -71,18 +69,12 @@ class Login : Fragment(), View.OnClickListener {
                 hideProgressDialog()
                 navController.navigate(R.id.login_to_home)
             } else {
-                if (bind.ProgressBar.root.isVisible) {
-                    bind.ProgressBar.root.isGone
-                }
-
                 mToast.errorMessageShow(
                     context,
                     signInTask.exception?.localizedMessage.toString()
                 )
                 hideProgressDialog()
-
             }
-
         }
     }
 
