@@ -6,6 +6,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 
+
 object utils {
     fun makeStatusBarTransparent(activity: Activity) {
         (activity as AppCompatActivity?)!!.window?.apply {
@@ -19,4 +20,6 @@ object utils {
             View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
     }
+
+    fun fullScreenAPP() {}
 }

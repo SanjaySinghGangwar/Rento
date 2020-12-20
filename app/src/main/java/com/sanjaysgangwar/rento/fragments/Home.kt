@@ -155,8 +155,16 @@ class Home : Fragment(), View.OnClickListener {
             R.id.unitCost -> {
                 openUnitCostDialog()
             }
+            R.id.logOut -> {
+                openDialogForConfirmation()
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun openDialogForConfirmation() {
+        val exit = exitConfirmation();
+        exit.showNow(parentFragmentManager, "exit User")
     }
 
 
