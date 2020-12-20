@@ -11,6 +11,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.sanjaysgangwar.rento.R
 import com.sanjaysgangwar.rento.databinding.UnitCostBinding
 import com.sanjaysgangwar.rento.utils.mToast
+import kotlin.math.round
 
 class unitCost : BottomSheetDialogFragment(), View.OnClickListener {
     private var binding: UnitCostBinding? = null
@@ -49,8 +50,9 @@ class unitCost : BottomSheetDialogFragment(), View.OnClickListener {
                 if (!bind.electricityBill.text.isNullOrEmpty() && !bind.unitUsed.text.isNullOrEmpty()) {
                     var electricityBill = bind.electricityBill.text.toString().toDouble()
                     var unitUsed = bind.unitUsed.text.toString().toDouble()
-                    val value = electricityBill / unitUsed
-                    bind.unitCost.setText(value.toString())
+                    val value = (electricityBill / unitUsed)
+
+                    bind.unitCost.setText((round(value * 100) / 100).toString())
 
                 } else {
                     mToast.errorShow(v.context)
@@ -88,6 +90,7 @@ class unitCost : BottomSheetDialogFragment(), View.OnClickListener {
                 }
             }
     }
+
     private fun hideProgressDialog() {
         dismiss()
         bind.ProgressBar.root.visibility = View.GONE

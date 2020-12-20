@@ -2,15 +2,22 @@ package com.sanjaysgangwar.rento.fragments
 
 import android.os.Bundle
 import android.view.*
+import android.view.View.GONE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sanjaysgangwar.rento.R
 import com.sanjaysgangwar.rento.databinding.TenantDetailsBinding
+import com.sanjaysgangwar.rento.model.modelClass
 import com.sanjaysgangwar.rento.utils.mToast
+import com.sanjaysgangwar.rento.viewHolders.billViewHolder
 import com.squareup.picasso.Picasso
+import kotlin.math.round
 
 
 class tenantDetails : Fragment(), View.OnClickListener {
@@ -44,9 +51,6 @@ class tenantDetails : Fragment(), View.OnClickListener {
         fetchBills()
     }
 
-    private fun fetchBills() {
-
-    }
 
     private fun fetchMyDetails() {
         myRef.child("tenants").child(userID).addValueEventListener(object : ValueEventListener {
@@ -100,6 +104,7 @@ class tenantDetails : Fragment(), View.OnClickListener {
             .child(FirebaseAuth.getInstance().uid.toString())
         bind.fab.setOnClickListener(this)
         (activity as AppCompatActivity?)!!.setSupportActionBar(bind.toolbar)
+        bind.bills.layoutManager = LinearLayoutManager(context)
 
     }
 
@@ -133,6 +138,53 @@ class tenantDetails : Fragment(), View.OnClickListener {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun fetchBills() {
+        val option: FirebaseRecyclerOptions<modelClass> =
+            FirebaseRecyclerOptions.Builder<modelClass>()
+                .setQuery(
+                    myRef.child("tenants").child(userID).child("bill").orderByKey(),
+                    modelClass::class.java
+                )
+                .build()
+
+        val recyclerAdapter =
+            object : FirebaseRecyclerAdapter<modelClass, billViewHolder>(option) {
+                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): billViewHolder {
+                    val view =
+                        LayoutInflater.from(context)
+                            .inflate(R.layout.show_bills_layout, parent, false)
+                    return billViewHolder(view)
+                }
+
+
+                override fun onBindViewHolder(
+                    holder: billViewHolder,
+                    position: Int,
+                    model: modelClass
+                ) {
+                    if (position == 0) {
+                        bind.noBillYet.visibility = GONE
+                    }
+                    holder.month.text = getRef(position).key.toString()
+                    holder.perUnitCost.text = model.perUnitCst + "/-"
+                    holder.rentAmount.text = model.rent + "/-"
+                    holder.totalBill.text = "Total : " + model.total + "/-"
+                    holder.unitUsed.text = model.unitUsed
+                    val electriAmount = round(
+                        (model.total.trim().toDouble() - model.rent.trim().toDouble()) * 100
+                    ) / 100
+
+                    holder.electrictyAmount.text = "$electriAmount/-"
+                }
+
+
+            }
+
+        bind.bills.adapter = recyclerAdapter
+        recyclerAdapter.startListening()
+
     }
 
 }

@@ -1,17 +1,23 @@
 package com.sanjaysgangwar.rento.fragments
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sanjaysgangwar.rento.R
 import com.sanjaysgangwar.rento.databinding.GenerateBillBinding
+import com.sanjaysgangwar.rento.functions.mFuntion.sendBillToThePhoneNumber
 import com.sanjaysgangwar.rento.utils.mToast
 import java.util.*
+import kotlin.math.round
 
 
 class generateBill(
@@ -67,10 +73,53 @@ class generateBill(
             .child(FirebaseAuth.getInstance().uid.toString())
         bind.lastUnit.setText(lastUnit)
         bind.createBill.setOnClickListener(this)
+        bind.SendBill.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
+            R.id.SendBill -> {
+                // check permission is given
+                if (ContextCompat.checkSelfPermission(
+                        v.context,
+                        Manifest.permission.SEND_SMS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // request permission (see result in onRequestPermissionsResult() method)
+                    ActivityCompat.requestPermissions(
+                        activity!!,
+                        arrayOf(Manifest.permission.SEND_SMS),
+                        100
+                    );
+                } else {
+                    // permission already granted run sms send
+                    if (!bind.currentUnit.text.toString()
+                            .isNullOrEmpty() && !bind.lastUnit.text.toString()
+                            .isNullOrEmpty() && !bind.perUnitCost.text.toString().isNullOrEmpty()
+                        && bind.currentUnit.text.toString() > bind.lastUnit.text.toString()
+                    ) {
+                        var currentUnit = bind.currentUnit.text.toString().toDouble()
+                        var lastUnit = bind.lastUnit.text.toString().toDouble()
+                        var perUnitCst = bind.perUnitCost.text.toString().toDouble()
+                        var rent = bind.rent.text.toString().toDouble()
+                        var unitUsed = currentUnit - lastUnit
+                        var amount = (unitUsed * perUnitCst) + rent
+                        var total = round(amount * 100) / 100
+                        sendBillToThePhoneNumber(
+                            v.context,
+                            number,
+                            rent.toString(),
+                            perUnitCst.toString(),
+                            currentUnit.toString(),
+                            unitUsed.toString(),
+                            total.toString()
+                        )
+                        bind.total.setText(total.toString())
+                    } else {
+                        mToast.errorShow(v.context)
+                    }
+                }
+            }
             R.id.createBill -> {
                 if (!bind.currentUnit.text.toString()
                         .isNullOrEmpty() && !bind.lastUnit.text.toString()
@@ -82,9 +131,8 @@ class generateBill(
                     var perUnitCst = bind.perUnitCost.text.toString().toDouble()
                     var rent = bind.rent.text.toString().toDouble()
                     var unitUsed = currentUnit - lastUnit
-                    var total =
-                        ((unitUsed)
-                                * perUnitCst) + rent
+                    var amount = (unitUsed * perUnitCst) + rent
+                    var total = round(amount * 100) / 100
                     sendBillToTheDatabase(
                         v.context,
                         rent.toString(),
