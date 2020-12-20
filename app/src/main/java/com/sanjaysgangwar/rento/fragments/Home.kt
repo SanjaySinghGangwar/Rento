@@ -7,16 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.sanjaysgangwar.rento.R
 import com.sanjaysgangwar.rento.databinding.HomeBinding
 import com.sanjaysgangwar.rento.model.modelClass
+import com.sanjaysgangwar.rento.utils.mToast
 import com.sanjaysgangwar.rento.viewHolders.homeViewHolder
 import com.squareup.picasso.Picasso
 
@@ -49,8 +50,11 @@ class Home : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAllComponents(view)
-        (activity as AppCompatActivity?)!!.setSupportActionBar(bind.toolbar)
+        //makeStatusBarTransparent(activity!!)
+        fetchDetailsForMyProfile()
+
     }
+
 
     private fun initAllComponents(view: View) {
         navController = Navigation.findNavController(view)
@@ -58,18 +62,16 @@ class Home : Fragment(), View.OnClickListener {
 
         database = FirebaseDatabase.getInstance()
         myRef = database.getReference(view.resources.getString(R.string.app_name))
-            .child(FirebaseAuth.getInstance().uid.toString()).child("tenants")
+            .child(FirebaseAuth.getInstance().uid.toString())
         materialAlertDialogBuilder = MaterialAlertDialogBuilder(view.context)
         customAlertDialogView = LayoutInflater.from(context)
             .inflate(R.layout.add_users, null, false)
         bind.fab.setOnClickListener(this)
+
         bind.showTenents.layoutManager = LinearLayoutManager(context)
-        //AT The End
-        Picasso.get()
-            .load("https://therightsofnature.org/wp-content/uploads/2018/01/turkey-3048299_1920-1366x550.jpg")
-            .placeholder(R.drawable.icon)
-            .error(R.drawable.icon)
-            .into(bind.userImage);
+        (activity as AppCompatActivity?)!!.setSupportActionBar(bind.toolbar)
+
+
     }
 
     override fun onClick(v: View?) {
@@ -95,7 +97,7 @@ class Home : Fragment(), View.OnClickListener {
     private fun initRecycler() {
         val option: FirebaseRecyclerOptions<modelClass> =
             FirebaseRecyclerOptions.Builder<modelClass>()
-                .setQuery(myRef.orderByChild("name"), modelClass::class.java)
+                .setQuery(myRef.child("tenants").orderByChild("name"), modelClass::class.java)
                 .build()
         val recyclerAdapter =
             object : FirebaseRecyclerAdapter<modelClass, homeViewHolder>(option) {
@@ -113,17 +115,15 @@ class Home : Fragment(), View.OnClickListener {
                 ) {
                     holder.namE.setText(model.name)
                     holder.numbeR.setText(model.number)
-
-
                     holder.numbeR.setOnClickListener { clicked ->
-                        operationToPerform(view, position)
+                        operationToPerform(view, getRef(position).key.toString())
                     }
                     holder.namE.setOnClickListener { clicked ->
-                        operationToPerform(view, position)
+                        operationToPerform(view, getRef(position).key.toString())
                     }
 
                     holder.card.setOnClickListener { clicked ->
-                        operationToPerform(view, position)
+                        operationToPerform(view, getRef(position).key.toString())
                     }
                 }
 
@@ -134,8 +134,12 @@ class Home : Fragment(), View.OnClickListener {
         recyclerAdapter.startListening()
     }
 
-    private fun operationToPerform(view: View?, position: Int) {
-        Log.i("OnClick ", "operationToPerform: $position")
+    private fun operationToPerform(view: View?, userID: String) {
+        Log.i("OnClick ", "operationToPerform: $userID")
+
+        val action = HomeDirections.homeToTenantDetails(userID)
+        view?.findNavController()?.navigate(action)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -148,15 +152,45 @@ class Home : Fragment(), View.OnClickListener {
             R.id.profile -> {
                 openProfileDialog()
             }
+            R.id.unitCost -> {
+                openUnitCostDialog()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
+
 
     private fun openProfileDialog() {
         val profile = profile()
         profile.showNow(parentFragmentManager, "add User")
     }
 
+    private fun openUnitCostDialog() {
+        val unitCost = unitCost()
+        unitCost.showNow(parentFragmentManager, "add Unit")
+    }
+
+    private fun fetchDetailsForMyProfile() {
+        myRef.child("profile").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.hasChild("profileUri")) {
+                    Picasso.get()
+                        .load(dataSnapshot.child("profileUri").value.toString())
+                        .placeholder(R.drawable.icon)
+                        .error(R.drawable.icon)
+                        .into(bind.userImage);
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                mToast.errorMessageShow(
+                    context?.applicationContext!!,
+                    error.toException().message
+                )
+            }
+        })
+    }
 }
 
 
