@@ -8,7 +8,8 @@ class modelClass(
     var perUnitCst: String = "",
     var currentUnit: String = "",
     var total: String = "",
-    var unitUsed: String = ""
+    var unitUsed: String = "",
+    var electricity: String = ""
 ) {
 }
 

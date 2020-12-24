@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sanjaysgangwar.rento.R
 import com.sanjaysgangwar.rento.databinding.GenerateBillBinding
-import com.sanjaysgangwar.rento.functions.mFuntion.sendBillToThePhoneNumber
+import com.sanjaysgangwar.rento.functions.mSms
 import com.sanjaysgangwar.rento.utils.mToast
 import java.util.*
 import kotlin.math.round
@@ -103,16 +103,21 @@ class generateBill(
                         var perUnitCst = bind.perUnitCost.text.toString().toDouble()
                         var rent = bind.rent.text.toString().toDouble()
                         var unitUsed = currentUnit - lastUnit
-                        var amount = (unitUsed * perUnitCst) + rent
+                        var ElectrityBill = unitUsed * perUnitCst
+                        var amount = ElectrityBill + rent
                         var total = round(amount * 100) / 100
-                        sendBillToThePhoneNumber(
+                        var month = Calendar.getInstance()
+                            .getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
+                        mSms.sendDetailsedBill(
                             v.context,
                             number,
+                            month,
+                            total.toString(),
                             rent.toString(),
-                            perUnitCst.toString(),
-                            currentUnit.toString(),
+                            ElectrityBill.toString(),
                             unitUsed.toString(),
-                            total.toString()
+                            perUnitCst.toString(),
+                            currentUnit.toString()
                         )
                         bind.total.setText(total.toString())
                     } else {
@@ -131,10 +136,12 @@ class generateBill(
                     var perUnitCst = bind.perUnitCost.text.toString().toDouble()
                     var rent = bind.rent.text.toString().toDouble()
                     var unitUsed = currentUnit - lastUnit
-                    var amount = (unitUsed * perUnitCst) + rent
+                    var ElectrityBill = unitUsed * perUnitCst
+                    var amount = ElectrityBill + rent
                     var total = round(amount * 100) / 100
                     sendBillToTheDatabase(
                         v.context,
+                        ElectrityBill.toString(),
                         rent.toString(),
                         perUnitCst.toString(),
                         currentUnit.toString(),
@@ -153,6 +160,7 @@ class generateBill(
 
     private fun sendBillToTheDatabase(
         context: Context,
+        electricityBill: String,
         rent: String,
         perUnitCst: String,
         currentUnit: String,
@@ -165,6 +173,7 @@ class generateBill(
 
         var dataToSend = HashMap<String, String>()
         dataToSend["perUnitCst"] = perUnitCst
+        dataToSend["electricity"] = electricityBill
         dataToSend["currentUnit"] = currentUnit
         dataToSend["unitUsed"] = unitUsed
         dataToSend["total"] = total

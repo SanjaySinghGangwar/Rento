@@ -1,9 +1,14 @@
 package com.sanjaysgangwar.rento.fragments
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.*
 import android.view.View.GONE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,11 +18,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sanjaysgangwar.rento.R
 import com.sanjaysgangwar.rento.databinding.TenantDetailsBinding
+import com.sanjaysgangwar.rento.functions.mSms
 import com.sanjaysgangwar.rento.model.modelClass
 import com.sanjaysgangwar.rento.utils.mToast
 import com.sanjaysgangwar.rento.viewHolders.billViewHolder
 import com.squareup.picasso.Picasso
-import kotlin.math.round
 
 
 class tenantDetails : Fragment(), View.OnClickListener {
@@ -170,13 +175,41 @@ class tenantDetails : Fragment(), View.OnClickListener {
                     holder.month.text = getRef(position).key.toString()
                     holder.perUnitCost.text = model.perUnitCst + "/-"
                     holder.rentAmount.text = model.rent + "/-"
+                    holder.electrictyAmount.text = model.electricity + "/-"
                     holder.totalBill.text = "Total : " + model.total + "/-"
                     holder.unitUsed.text = model.unitUsed
-                    val electriAmount = round(
-                        (model.total.trim().toDouble() - model.rent.trim().toDouble()) * 100
-                    ) / 100
+                    holder.sendBill.setOnClickListener { sendSms ->
+                        if (ContextCompat.checkSelfPermission(
+                                view?.context!!,
+                                Manifest.permission.SEND_SMS
+                            ) != PackageManager.PERMISSION_GRANTED
+                        ) {
+                            // request permission (see result in onRequestPermissionsResult() method)
+                            ActivityCompat.requestPermissions(
+                                activity!!,
+                                arrayOf(Manifest.permission.SEND_SMS),
+                                100
+                            );
+                        } else {
+                            operationToPerform(
+                                view?.context,
+                                getRef(
+                                    position
+                                ).key.toString(),
+                                model.rent + "/-",
+                                model.electricity + "/-",
+                                model.unitUsed,
+                                model.perUnitCst + "/-", model.total
+                            )
+                        }
+                    }
 
-                    holder.electrictyAmount.text = "$electriAmount/-"
+
+                    /*  val electriAmount = round(
+                          (model.total.trim().toDouble() - model.rent.trim().toDouble()) * 100
+                      ) / 100
+
+                      holder.electrictyAmount.text = "$electriAmount/-"*/
                 }
 
 
@@ -185,6 +218,27 @@ class tenantDetails : Fragment(), View.OnClickListener {
         bind.bills.adapter = recyclerAdapter
         recyclerAdapter.startListening()
 
+    }
+
+    private fun operationToPerform(
+        context: Context?,
+        month: String,
+        rent: String,
+        electricity: String,
+        unitUsed: String,
+        perUnitCost: String,
+        total: String
+    ) {
+        mSms.sendBill(
+            context!!,
+            month,
+            bind.number.text.toString(),
+            total,
+            rent,
+            electricity,
+            unitUsed,
+            perUnitCost
+        )
     }
 
 }

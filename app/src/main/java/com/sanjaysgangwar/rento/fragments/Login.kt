@@ -44,6 +44,27 @@ class Login : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
+            R.id.forgetPassword -> {
+                if (bind.email.text.isNullOrEmpty()) {
+                    mToast.errorMessageShow(v.context, "Please Provide Email")
+                } else {
+                    FirebaseAuth.getInstance().sendPasswordResetEmail(bind.email.text.toString())
+                        .addOnCompleteListener { sendLink ->
+                            if (sendLink.isSuccessful) {
+                                mToast.successShowMessage(
+                                    v.context,
+                                    "Link Send To Registered E-Mail Address"
+                                )
+                            } else {
+                                mToast.errorMessageShow(
+                                    v.context,
+                                    sendLink.exception?.localizedMessage
+                                )
+                            }
+                        }
+                }
+
+            }
             R.id.loginButton -> {
                 if (bind.email.text.isNullOrEmpty() || bind.password.text.isNullOrEmpty()) {
                     mToast.errorMessageShow(v.context, "Enter All Details")
@@ -87,6 +108,7 @@ class Login : Fragment(), View.OnClickListener {
     }
 
     private fun initAllComponents(view: View) {
+        bind.forgetPassword.setOnClickListener(this)
         bind.loginButton.setOnClickListener(this)
         bind.signUpButton.setOnClickListener(this)
         mAuth = FirebaseAuth.getInstance();
