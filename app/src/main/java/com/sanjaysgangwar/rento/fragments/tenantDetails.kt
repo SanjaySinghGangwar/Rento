@@ -1,14 +1,10 @@
 package com.sanjaysgangwar.rento.fragments
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.*
 import android.view.View.GONE
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sanjaysgangwar.rento.R
 import com.sanjaysgangwar.rento.databinding.TenantDetailsBinding
-import com.sanjaysgangwar.rento.functions.mSms
+import com.sanjaysgangwar.rento.functions.mSms.sendBill
 import com.sanjaysgangwar.rento.model.modelClass
 import com.sanjaysgangwar.rento.utils.mToast
 import com.sanjaysgangwar.rento.viewHolders.billViewHolder
@@ -179,37 +175,17 @@ class tenantDetails : Fragment(), View.OnClickListener {
                     holder.totalBill.text = "Total : " + model.total + "/-"
                     holder.unitUsed.text = model.unitUsed
                     holder.sendBill.setOnClickListener { sendSms ->
-                        if (ContextCompat.checkSelfPermission(
-                                view?.context!!,
-                                Manifest.permission.SEND_SMS
-                            ) != PackageManager.PERMISSION_GRANTED
-                        ) {
-                            // request permission (see result in onRequestPermissionsResult() method)
-                            ActivityCompat.requestPermissions(
-                                activity!!,
-                                arrayOf(Manifest.permission.SEND_SMS),
-                                100
-                            );
-                        } else {
-                            operationToPerform(
-                                view?.context,
-                                getRef(
-                                    position
-                                ).key.toString(),
-                                model.rent + "/-",
-                                model.electricity + "/-",
-                                model.unitUsed,
-                                model.perUnitCst + "/-", model.total
-                            )
-                        }
+                        operationToPerform(
+                            view?.context,
+                            getRef(
+                                position
+                            ).key.toString(),
+                            model.rent + "/-",
+                            model.electricity + "/-",
+                            model.unitUsed,
+                            model.perUnitCst + "/-", model.total
+                        )
                     }
-
-
-                    /*  val electriAmount = round(
-                          (model.total.trim().toDouble() - model.rent.trim().toDouble()) * 100
-                      ) / 100
-
-                      holder.electrictyAmount.text = "$electriAmount/-"*/
                 }
 
 
@@ -229,10 +205,9 @@ class tenantDetails : Fragment(), View.OnClickListener {
         perUnitCost: String,
         total: String
     ) {
-        mSms.sendBill(
+        sendBill(
             context!!,
             month,
-            bind.number.text.toString(),
             total,
             rent,
             electricity,

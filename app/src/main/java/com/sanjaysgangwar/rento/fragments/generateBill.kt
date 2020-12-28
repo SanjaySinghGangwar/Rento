@@ -1,14 +1,10 @@
 package com.sanjaysgangwar.rento.fragments
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -79,50 +75,34 @@ class generateBill(
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.SendBill -> {
-                // check permission is given
-                if (ContextCompat.checkSelfPermission(
-                        v.context,
-                        Manifest.permission.SEND_SMS
-                    ) != PackageManager.PERMISSION_GRANTED
+                if (!bind.currentUnit.text.toString()
+                        .isNullOrEmpty() && !bind.lastUnit.text.toString()
+                        .isNullOrEmpty() && !bind.perUnitCost.text.toString().isNullOrEmpty()
+                    && bind.currentUnit.text.toString() > bind.lastUnit.text.toString()
                 ) {
-                    // request permission (see result in onRequestPermissionsResult() method)
-                    ActivityCompat.requestPermissions(
-                        activity!!,
-                        arrayOf(Manifest.permission.SEND_SMS),
-                        100
-                    );
+                    var currentUnit = bind.currentUnit.text.toString().toDouble()
+                    var lastUnit = bind.lastUnit.text.toString().toDouble()
+                    var perUnitCst = bind.perUnitCost.text.toString().toDouble()
+                    var rent = bind.rent.text.toString().toDouble()
+                    var unitUsed = currentUnit - lastUnit
+                    var ElectrityBill = unitUsed * perUnitCst
+                    var amount = ElectrityBill + rent
+                    var total = round(amount * 100) / 100
+                    var month = Calendar.getInstance()
+                        .getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
+                    mSms.sendDetailsedBill(
+                        v.context,
+                        month,
+                        total.toString(),
+                        rent.toString(),
+                        ElectrityBill.toString(),
+                        unitUsed.toString(),
+                        perUnitCst.toString(),
+                        currentUnit.toString()
+                    )
+                    bind.total.setText(total.toString())
                 } else {
-                    // permission already granted run sms send
-                    if (!bind.currentUnit.text.toString()
-                            .isNullOrEmpty() && !bind.lastUnit.text.toString()
-                            .isNullOrEmpty() && !bind.perUnitCost.text.toString().isNullOrEmpty()
-                        && bind.currentUnit.text.toString() > bind.lastUnit.text.toString()
-                    ) {
-                        var currentUnit = bind.currentUnit.text.toString().toDouble()
-                        var lastUnit = bind.lastUnit.text.toString().toDouble()
-                        var perUnitCst = bind.perUnitCost.text.toString().toDouble()
-                        var rent = bind.rent.text.toString().toDouble()
-                        var unitUsed = currentUnit - lastUnit
-                        var ElectrityBill = unitUsed * perUnitCst
-                        var amount = ElectrityBill + rent
-                        var total = round(amount * 100) / 100
-                        var month = Calendar.getInstance()
-                            .getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
-                        mSms.sendDetailsedBill(
-                            v.context,
-                            number,
-                            month,
-                            total.toString(),
-                            rent.toString(),
-                            ElectrityBill.toString(),
-                            unitUsed.toString(),
-                            perUnitCst.toString(),
-                            currentUnit.toString()
-                        )
-                        bind.total.setText(total.toString())
-                    } else {
-                        mToast.errorShow(v.context)
-                    }
+                    mToast.errorShow(v.context)
                 }
             }
             R.id.createBill -> {
