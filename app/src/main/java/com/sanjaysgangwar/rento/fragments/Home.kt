@@ -134,6 +134,7 @@ class Home : Fragment(), View.OnClickListener {
         recyclerAdapter.startListening()
     }
 
+
     private fun operationToPerform(view: View?, userID: String) {
         Log.i("OnClick ", "operationToPerform: $userID")
 

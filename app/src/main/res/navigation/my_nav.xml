@@ -104,5 +104,14 @@
         <argument
             android:name="userID"
             app:argType="string" />
+        <action
+            android:id="@+id/tenantDetails_to_home"
+            app:destination="@id/home"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/login"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

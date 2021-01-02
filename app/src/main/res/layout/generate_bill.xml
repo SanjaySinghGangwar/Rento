@@ -82,7 +82,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/default_font"
-                    android:hint="Current Unit" />
+                    android:hint="Current Unit"
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -94,11 +95,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/lastUnit"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/default_font"
-                    android:hint="Last Unit" />
+                    android:hint="Last Unit"
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -112,12 +113,12 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/perUnitCost"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
                 android:fontFamily="@font/default_font"
                 android:hint="Per Unit Cost"
+                android:inputType="numberDecimal"
                 android:text="10" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -137,10 +138,12 @@
                 android:hint="Total"
                 android:text="" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <include
             android:id="@+id/ProgressBar"
             layout="@layout/progress_view"
             android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

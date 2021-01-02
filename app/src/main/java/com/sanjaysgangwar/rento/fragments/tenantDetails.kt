@@ -6,6 +6,8 @@ import android.view.*
 import android.view.View.GONE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.FirebaseRecyclerAdapter
@@ -30,6 +32,7 @@ class tenantDetails : Fragment(), View.OnClickListener {
     lateinit var database: FirebaseDatabase
     val args: tenantDetailsArgs by navArgs()
     private lateinit var myRef: DatabaseReference
+    lateinit var navController: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,6 +102,7 @@ class tenantDetails : Fragment(), View.OnClickListener {
     }
 
     private fun initAllComponents(view: View) {
+        navController = Navigation.findNavController(view)
         database = FirebaseDatabase.getInstance()
         userID = args.userID
         myRef = database.getReference(view.resources.getString(R.string.app_name))
@@ -136,6 +140,21 @@ class tenantDetails : Fragment(), View.OnClickListener {
                     context?.applicationContext!!,
                     "Tap and hold field to edit"
                 )
+            }
+            R.id.delete -> {
+                myRef.child("tenants")
+                    .child(userID).removeValue().addOnCompleteListener { onComplete ->
+                        if (onComplete.isSuccessful) {
+                            mToast.successShowMessage(view?.context!!, "Done !!")
+                            navController.navigate(R.id.tenantDetails_to_home)
+                        } else {
+                            mToast.errorMessageShow(
+                                view?.context!!,
+                                onComplete.exception?.localizedMessage
+                            )
+                        }
+
+                    }
             }
         }
         return super.onOptionsItemSelected(item)

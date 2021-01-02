@@ -7,4 +7,10 @@
         android:title="@string/edit_profile"
         android:visible="true"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/delete_image"
+        android:title="@string/delete_profile"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
 </menu>
