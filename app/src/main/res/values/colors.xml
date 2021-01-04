@@ -9,7 +9,7 @@
 
     //-----------------------------------------------------
     <color name="statusBarLight">#FFB125</color>
-    <color name="statusBarDark">#29282B</color>
+    <color name="statusBarDark">#000000</color>
     <color name="lightBackground">#FFFFFF</color>
     <color name="darkBackground">#403F42</color>
     <color name="translucent">#CCFF0000</color>

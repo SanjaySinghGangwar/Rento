@@ -104,5 +104,7 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="unit_cost">Unit Cost</string>
     <string name="delete_profile">Delete Profile</string>
+    <string name="donate">Donate</string>
+    <string name="logOut">Logout</string>
 
 </resources>

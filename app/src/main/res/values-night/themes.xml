@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.Rento" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/statusBarDark</item>
+        <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryVariant">@color/statusBarDark</item>
         <item name="colorOnPrimary">#2B2B2B</item>
         <item name="colorOnSecondary">@android:color/black</item>

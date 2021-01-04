@@ -7,10 +7,10 @@
     android:orientation="vertical">
 
     <ProgressBar
-        android:layout_marginTop="10dp"
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:id="@+id/pbText"
@@ -21,7 +21,6 @@
         android:text="Stay Calm ..."
         android:textAllCaps="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/design_default_color_primary"
         android:textStyle="bold" />
 
 </LinearLayout>

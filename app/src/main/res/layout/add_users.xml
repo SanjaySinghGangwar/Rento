@@ -123,7 +123,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:fontFamily="@font/default_font"
             android:foregroundGravity="center"
             android:gravity="center"
             android:text="@string/add"

@@ -14,9 +14,15 @@
         android:visible="true"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/donate"
+        android:icon="@drawable/donate_image"
+        android:title="@string/donate"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/logOut"
         android:icon="@drawable/log_out_image"
-        android:title="@string/unit_cost"
+        android:title="@string/logOut"
         android:visible="true"
         app:showAsAction="ifRoom" />
 </menu>

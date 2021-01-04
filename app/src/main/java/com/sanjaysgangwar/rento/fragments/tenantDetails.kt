@@ -116,7 +116,6 @@ class tenantDetails : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.fab -> {
-
                 val createBill = generateBill(
                     userID,
                     bind.rent.text.toString(),
@@ -142,7 +141,9 @@ class tenantDetails : Fragment(), View.OnClickListener {
                 )
             }
             R.id.delete -> {
-                myRef.child("tenants")
+                val exit = exitConfirmation("deleteUser", userID, navController);
+                exit.showNow(parentFragmentManager, "Delete User")
+                /*myRef.child("tenants")
                     .child(userID).removeValue().addOnCompleteListener { onComplete ->
                         if (onComplete.isSuccessful) {
                             mToast.successShowMessage(view?.context!!, "Done !!")
@@ -154,7 +155,7 @@ class tenantDetails : Fragment(), View.OnClickListener {
                             )
                         }
 
-                    }
+                    }*/
             }
         }
         return super.onOptionsItemSelected(item)

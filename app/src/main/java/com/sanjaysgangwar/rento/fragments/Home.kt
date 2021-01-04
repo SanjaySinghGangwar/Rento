@@ -58,8 +58,6 @@ class Home : Fragment(), View.OnClickListener {
 
     private fun initAllComponents(view: View) {
         navController = Navigation.findNavController(view)
-
-
         database = FirebaseDatabase.getInstance()
         myRef = database.getReference(view.resources.getString(R.string.app_name))
             .child(FirebaseAuth.getInstance().uid.toString())
@@ -67,7 +65,6 @@ class Home : Fragment(), View.OnClickListener {
         customAlertDialogView = LayoutInflater.from(context)
             .inflate(R.layout.add_users, null, false)
         bind.fab.setOnClickListener(this)
-
         bind.showTenents.layoutManager = LinearLayoutManager(context)
         (activity as AppCompatActivity?)!!.setSupportActionBar(bind.toolbar)
 
@@ -113,6 +110,9 @@ class Home : Fragment(), View.OnClickListener {
                     position: Int,
                     model: modelClass
                 ) {
+                    if (position == 0) {
+                        bind.noUser.visibility = View.GONE
+                    }
                     holder.namE.setText(model.name)
                     holder.numbeR.setText(model.number)
                     holder.numbeR.setOnClickListener { clicked ->
@@ -159,12 +159,15 @@ class Home : Fragment(), View.OnClickListener {
             R.id.logOut -> {
                 openDialogForConfirmation()
             }
+            R.id.donate -> {
+                navController.navigate(R.id.home_to_donate)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun openDialogForConfirmation() {
-        val exit = exitConfirmation();
+        val exit = exitConfirmation("logOut", "0", navController);
         exit.showNow(parentFragmentManager, "exit User")
     }
 
