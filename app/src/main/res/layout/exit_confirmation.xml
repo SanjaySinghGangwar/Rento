@@ -6,7 +6,7 @@
 
     android:orientation="vertical"
 
-    tools:context=".fragments.exitConfirmation">
+    tools:context=".bottomSheets.exitConfirmation">
 
 
     <TextView

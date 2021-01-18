@@ -15,6 +15,9 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sanjaysgangwar.rento.R
+import com.sanjaysgangwar.rento.bottomSheets.exitConfirmation
+import com.sanjaysgangwar.rento.bottomSheets.generateBill
+import com.sanjaysgangwar.rento.bottomSheets.updateData
 import com.sanjaysgangwar.rento.databinding.TenantDetailsBinding
 import com.sanjaysgangwar.rento.functions.mSms.sendBill
 import com.sanjaysgangwar.rento.model.modelClass
@@ -23,7 +26,7 @@ import com.sanjaysgangwar.rento.viewHolders.billViewHolder
 import com.squareup.picasso.Picasso
 
 
-class tenantDetails : Fragment(), View.OnClickListener {
+class tenantDetails : Fragment(), View.OnClickListener, View.OnLongClickListener {
 
 
     private var binding: TenantDetailsBinding? = null
@@ -102,6 +105,11 @@ class tenantDetails : Fragment(), View.OnClickListener {
     }
 
     private fun initAllComponents(view: View) {
+        bind.name.setOnLongClickListener(this)
+        bind.number.setOnLongClickListener(this)
+        bind.rent.setOnLongClickListener(this)
+        bind.UID.setOnLongClickListener(this)
+
         navController = Navigation.findNavController(view)
         database = FirebaseDatabase.getInstance()
         userID = args.userID
@@ -143,19 +151,6 @@ class tenantDetails : Fragment(), View.OnClickListener {
             R.id.delete -> {
                 val exit = exitConfirmation("deleteUser", userID, navController);
                 exit.showNow(parentFragmentManager, "Delete User")
-                /*myRef.child("tenants")
-                    .child(userID).removeValue().addOnCompleteListener { onComplete ->
-                        if (onComplete.isSuccessful) {
-                            mToast.successShowMessage(view?.context!!, "Done !!")
-                            navController.navigate(R.id.tenantDetails_to_home)
-                        } else {
-                            mToast.errorMessageShow(
-                                view?.context!!,
-                                onComplete.exception?.localizedMessage
-                            )
-                        }
-
-                    }*/
             }
         }
         return super.onOptionsItemSelected(item)
@@ -234,6 +229,29 @@ class tenantDetails : Fragment(), View.OnClickListener {
             unitUsed,
             perUnitCost
         )
+    }
+
+    override fun onLongClick(v: View?): Boolean {
+        when (v?.id) {
+            R.id.number -> {
+                val update = updateData(userID, "number", "Enter new phone number","Number")
+                update.showNow(parentFragmentManager, "update Data")
+            }
+            R.id.rent -> {
+                val update = updateData(userID, "rent", "Enter new rent","Rent")
+                update.showNow(parentFragmentManager, "update Data")
+            }
+            R.id.UID -> {
+                val update = updateData(userID, "id_card", "Enter new Id Card Number","ID Card")
+                update.showNow(parentFragmentManager, "update Data")
+            }
+            R.id.name -> {
+                val update = updateData(userID, "name", "Enter new name","Name")
+                update.showNow(parentFragmentManager, "update Data")
+            }
+
+        }
+        return true
     }
 
 }

@@ -94,4 +94,6 @@ dependencies {
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+	// FCM Notification
+	implementation 'com.google.firebase:firebase-messaging:20.1.0'
 }

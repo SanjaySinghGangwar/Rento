@@ -15,6 +15,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sanjaysgangwar.rento.R
+import com.sanjaysgangwar.rento.bottomSheets.addUser
+import com.sanjaysgangwar.rento.bottomSheets.exitConfirmation
+import com.sanjaysgangwar.rento.bottomSheets.profile
 import com.sanjaysgangwar.rento.databinding.HomeBinding
 import com.sanjaysgangwar.rento.model.modelClass
 import com.sanjaysgangwar.rento.utils.mToast
